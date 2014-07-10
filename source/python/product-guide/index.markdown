@@ -3601,21 +3601,21 @@ Attribute | Description | Type | Valid Value
 :----- | :----- | :---- | :----
 `id` | The unique identifier for the API Key | String | <span>--</span>
 `secret` | A secret identifier. Unique across all tenants. | String | --
-`status` | A property that represent the status of the key.  Keys with a disabled status will not be able to authenticate. | ApiKeyStatus | ApiKeyStatus.ENABLED, ApiKeyStatus.DISABLED, 
+`status` | A property that represent the status of the key.  Keys with a disabled status will not be able to authenticate. | ApiKeyStatus | ApiKeyStatus.ENABLED, ApiKeyStatus.DISABLED,
 `account` | A link to the ApiKey's applications. | Account | <span>--</span>
 `tenant` | A link to the ApiKey's tenant. | Tenant | <span>--</span>
 
-After the API Key is created, you will need to deliver the API Key ID and Secret to the developer so they can start using them to access your API securely.  In most cases, this is done by displaying the API keys on a web page. 
+After the API Key is created, you will need to deliver the API Key ID and Secret to the developer so they can start using them to access your API securely.  In most cases, this is done by displaying the API keys on a web page.
 
 #### Using the Stormpath SDK to Authenticate and Generate Tokens for your API
 
-The Stormpath SDK does all the heavy lifting for you in your application.  It automatically processes authentications via HTTP Basic or OAuth 2.0. In addition, the SDK will handle more advance OAuth 2.0 features like _scope_ and _time-to-live_.  
+The Stormpath SDK does all the heavy lifting for you in your application.  It automatically processes authentications via HTTP Basic or OAuth 2.0. In addition, the SDK will handle more advance OAuth 2.0 features like _scope_ and _time-to-live_.
 
 Specifically, Stormpath supports two HTTP `Authorization` methods, Basic and Bearer (OAuth 2.0 client-credentials grant type). In this section we will discuss the strategies and best practices using these authorization methods.
 
 All authentication attempts in Stormpath start with the `Application` object in the SDK.  You will likely have initialized the `Application` during startup.
 
-To demonstrate how the SDK works, we'll use an example.  We are building a Stormtrooper API for managing Stormtrooper equipment -- like awesome helmets and blasters.  In order to secure our API, a developer must base64 encode their API Key and Secret and then pass the encoded data in the authorization header. 
+To demonstrate how the SDK works, we'll use an example.  We are building a Stormtrooper API for managing Stormtrooper equipment -- like awesome helmets and blasters.  In order to secure our API, a developer must base64 encode their API Key and Secret and then pass the encoded data in the authorization header.
 
     base64.b64encode(id + ":" + secret)
 
@@ -3624,12 +3624,12 @@ To demonstrate how the SDK works, we'll use an example.  We are building a Storm
 
 The developer request would look something like this (using HTTPS Basic authentication):
 
-    GET /troopers/tk421/equipment 
+    GET /troopers/tk421/equipment
         Accept: application/json
         Authorization: Basic MzRVU1BWVUFURThLWDE4MElDTFVUMDNDTzpQSHozZitnMzNiNFpHc1R3dEtOQ2h0NzhBejNpSjdwWTIwREo5N0R2L1g4
         Host: api.trooperapp.com
 
-The Basic Authentication mechanism provides no confidentiality protection for the transmitted credentials. They are merely encoded with Base64 in transit, but not encrypted or hashed in any way. Stormpath recommends that when a developer calls your API, and if you use Basic Authentication, the call needs to be communicated over HTTPS protocol to provide additional security. 
+The Basic Authentication mechanism provides no confidentiality protection for the transmitted credentials. They are merely encoded with Base64 in transit, but not encrypted or hashed in any way. Stormpath recommends that when a developer calls your API, and if you use Basic Authentication, the call needs to be communicated over HTTPS protocol to provide additional security.
 
 In the simplest form, the Stormpath Python SDK would authenticate the above request (Basic or Bearer) as follows:
 
@@ -3667,13 +3667,13 @@ Stormpath SDK has all the tools needed to enable your API to support OAuth 2.0 B
      |         |<--- 2. -- Access Token ---------<|               |
      |         |                                  |               |
      +---------+                                  +---------------+
-  
+
   1.  The client authenticates with the authorization server and requests an access token from the token endpoint.
   2.  The authorization server authenticates the client, and if valid issues an access token.
- 
-Stormpath in this case is acting as the Authorization Server and will authenticate the client based on the API Key ID and Secret.  This allows you to generate an Access Token for a successful authentication result. 
 
-Going back to the Stormtrooper Equipment API example. The app would require that a developer call a REST endpoint to exchange a valid API Key and Secret for an Access Token. The REST endpoint would canonically be `/oauth/token`. The API Key and Secret would need to be base64 encoded in the request. An example of the REST call: 
+Stormpath in this case is acting as the Authorization Server and will authenticate the client based on the API Key ID and Secret.  This allows you to generate an Access Token for a successful authentication result.
+
+Going back to the Stormtrooper Equipment API example. The app would require that a developer call a REST endpoint to exchange a valid API Key and Secret for an Access Token. The REST endpoint would canonically be `/oauth/token`. The API Key and Secret would need to be base64 encoded in the request. An example of the REST call:
 
     POST /oauth/token
     Accept: application/json
@@ -3715,13 +3715,13 @@ all the valid scopes for that particular Stormpath Application. The second use-c
 
 After you return an OAuth Access Token to a developer using your API service, they can start using the OAuth Access Token to validate authentication to your service.
 
-Stormpath requires that the developer send the Access Token in the Authorization header of the request. 
+Stormpath requires that the developer send the Access Token in the Authorization header of the request.
 
-Again, the Stormtrooper Equipment API example. We will require that a developer exchange his API Key and Secret for an Access Token and then pass the Access Token in future requests to gain access to your API. 
+Again, the Stormtrooper Equipment API example. We will require that a developer exchange his API Key and Secret for an Access Token and then pass the Access Token in future requests to gain access to your API.
 
 The developer request would look something like this:
 
-    GET /troopers/tk421/equipment 
+    GET /troopers/tk421/equipment
     Accept: application/json
     Authorization: Bearer 7FRhtCNRapj9zs.YI8MqPiS8hzx3wJH4.qT29JUOpU64T
     Host: api.trooperapp.com
@@ -3736,7 +3736,7 @@ We can then proceed to authenticate the request with the same method as we did b
         "Invalid or expired Token"
 
 Notice the `allowed_scopes` parameter has a different meaning here than it did above. We can use it to specify allowed scopes
-for the specific endpoint the user is accessing (in this case /troopers/tk421/equipment). If the Access Token was not generated 
+for the specific endpoint the user is accessing (in this case /troopers/tk421/equipment). If the Access Token was not generated
 with all the scopes that this endpoint requires, the authentication will fail and the `result` variable will be empty.
 
 You can easily check the scope of a token with:
@@ -3751,7 +3751,7 @@ is in a specific Stormpath group before returning a response:
     else:
         print "Unsufficient permissions."
 
-**Note** While requesting an Access Token if the developer does not request any scopes the Access Token will be 
+**Note** While requesting an Access Token if the developer does not request any scopes the Access Token will be
 generated without them. This implies that if any subsequent request is done with that access token but tries to access
 an endpoint that requires any scopes, the request will fail to authenticate.
 
@@ -3768,6 +3768,114 @@ use the optional `ttl` parameter with the  `authenticate` method.
 ## Administering Stormpath
 
 For more information about administering Stormpath using the Admin Console, please refer to the [Admin Console Product Guide](http://stormpath.com/docs/console/product-guide).
+
+### Using Stormpath ID Site functionality
+
+#### What is ID Site?
+
+Stormpath ID Site is a set of hosted and pre-built user interface screens that take care of common identity functions for your applications (login, registration, password reset).
+ID Site can be accessed via your own custom domain like id.mydomain.com and shared across multiple applications to create centralized authentication if needed.
+
+The screens, and even the functionality, of ID site are completely customizable. You have full access to the source code of the ID Site screens
+so you can make simple changes like adding your logo and changing CSS or more complex changes like adding fields, adding javascript code,
+adding screens, removing screens, and even changing how the screens behave.
+
+#### Setting up your ID Site
+
+To use your application with an ID Site, you must use the Stormpath Python SDK to enable the integration. ID Sites enable the following workflow:
+
+1. The user visits your application for the first time and clicks the login/sign up button
+2. The user is redirected to the ID Site using the Stormpath Python SDK
+3. The user either signs up or logs into the ID Site
+4. If successful, the ID Site will redirect the user back to your application with the assertion about the user's identity
+
+In other words, your ID Site allows for application-initiated workflows and is used to supplement your application with the functionality that ID Site provides.
+
+Setting up your ID Site consists of using the Stormpath Admin Console to configure your ID Site.  Your ID Site uses a default configuration for testing purposes, but can be fully configured to host customized code or hosted through your own domain.
+
+To set up your ID Site, log into the Administrator Console and:
+
+1. Click on the `ID Site` Tab
+2. Add your application URL that will process the callback from the ID Site to the `Authorized Redirect URIs` property
+3. Click the `Update` button at the bottom of the page
+
+Once an ID Site is configured, a subdomain that will host your ID Site is set up on `stormpath.io`.  This follows the format of `tenant-name.id.stormpath.io` where tenant-name is the name of your Stormpath `Tenant`.
+
+For more advanced configurations, there are additional properties in the ID Site configuration that can help:
+
++ Set a Logo to appear at the top of the default ID Site UI
++ Set a custom domain name and SSL certificate (to host your ID Site from your domain, securely)
++ Set a custom github repo to host your ID Site (to host custom code)
+
+#### Using the Stormpath SDK to Enable your App to use your ID Site
+
+When a user visits your application and needs to login, sign up, or reset their password, you need to use the Stormpath Python SDK to integrate your application with your ID Site.  The Stormpath Python SDK will allow you to:
+
++ Communicate securely and redirect the user to your ID Site
++ Take a valid authentication request from the ID Site and return an `Account` object for the user
+
+When integrating an ID Site to your application, you can break down the integration into two steps:
+
++ Sending a User to the ID Site to Authenticate / Sign up
++ Consuming responses from the ID Site to your Application
+
+#### Sending a User to the ID Site to Authenticate / Sign up
+
+When a user wants to login to or register for your site, it is required to use the Stormpath SDK to redirect the user to the ID Site. For example, let's look at a login scenario:
+
+1. You render your application with a login button
+2. User clicks the login button which links to `/login`
+3. Your application on the `/login` request:
+    1. Uses the Stormpath SDK to get the redirection URL got the ID Site
+    2. Redirects the user to the ID Site URL
+
+To build an ID Site URL for redirection, you would do the following:
+
+        api_key =  app.api_keys[0] # the api key you wish to use for this application
+        uri = app.build_id_site_redirect_url(api_key, "https://myapp.example.com/callback")
+        return redirect(uri) # redirect being a function from your web framework of choice
+
+{% docs info %}
+**Reminder** - An `Application` is a representation of your real world application.  For more info check out our [Tutorial](https://stormpath.com/tutorial/) or [Product Guide](/python/product-guide/).
+{% enddocs %}
+
+Parameters:
+
++ `api_key` - Api Key used for authenticating your application with the Stormpath API.
++ `callback_uri` - The callback URI will be called when a successful login or registration event occurs. The Callback URI is **required** and it must match an `Authorized Redirect URI` in the Admin Console's ID Site settings.
++ `path` - an optional path for the ID Site.  The default ID Site does not require a path and will default to the login page.  There are additional pages that you can use the `path` to get to. This is important if you would like to separate the login button from the sign up button:
+    + `/#/register` - the path that will get the user to the registration page
+    + `/#/forgot` - the path that will get the user to the forgot password page
++ `state` - an optional string that stores information that your application needs after the user is redirected back to your application.  You may need to store information about what page the user was on, or any variables that are important for your application.
+
+Once you have the string representation of the URL to which to redirect the user.
+
+The HTTP response to the user should resemble:
+
+        HTTP/1.1 302 Found
+
+        Cache-Control: no-store no-cache
+        Pragma: no-cache
+        Expires: -1
+        Location: %%GENERATED_ID_SITE_URL%%
+
+#### Consuming responses from the ID Site to your Application
+
+Once the user has logged in, created an account, or verified an account, the ID Site will redirect the user back to your application using the `callback_uri` that you've set
+when creating the redirect URI. Your application needs to have logic to handle the callback and get the information about the user's account.  The Stormpath SDK has APIs to help your application get this information.
+
+To demonstrate how the SDK works, we’ll use an example. Imagine you are  building a Stormtrooper app for managing Stormtrooper equipment — like awesome helmets and blasters. The app is using Stormpath's ID Site for authentication.  The `callback_uri` that was set when creating the redirect URI is `http://trooperapp.com/authenticate`.  The `/authenticate` endpoint should
+take advantage of the Stormpath Python SDK to get the account information from the callback (and other important properties).
+
+For example:
+
+    ret = app.handle_id_site_callback(url_response) # feed the whole URI to the method (with parameters and all)
+    if ret is not None:
+        print ret.account
+        print ret.account.is_new_account # if the user came to the callback uri from the register screen
+        print ret.state # if any state was set during the creation of the redirect URI
+
+Once the account is retrieved, you can get access to additional account properties that are important to your app, such as `Groups` or `CustomData`.
 
 ***
 
